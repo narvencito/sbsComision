@@ -10,7 +10,12 @@ router.post('/sbs', (req, res) => {
   var arrayModel = [];
 
   puppeteer
-    .launch()
+    .launch({
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+      ],
+    })
     .then(function (browser) {
       return browser.newPage();
     })
