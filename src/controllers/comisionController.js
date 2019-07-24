@@ -9,7 +9,7 @@ const cModel = require('../models/comision.model');
 router.post('/sbs', (req, res) => {
   var arr = [];
   var arrayModel = [];
-
+  var date;
   puppeteer
     .launch({
       args: [
