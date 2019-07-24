@@ -1,3 +1,4 @@
+'use strict'
 const express = require('express');
 const router = express.Router();
 const url = 'https://www.sbs.gob.pe/app/spp/empleadores/comisiones_spp/Paginas/comision_prima.aspx';
