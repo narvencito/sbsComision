@@ -11,6 +11,7 @@ router.post('/sbs', (req, res) => {
 
   puppeteer
     .launch({
+      ignoreDefaultArgs : [ ' --disable-extensions ' ],
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
