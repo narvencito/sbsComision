@@ -7,7 +7,7 @@ const cheerio = require('cheerio');
 const cModel = require('../models/comision.model');
 
 router.post('/sbs', async (req, res) => {
-  console.log("init del servicio de sbs");
+  console.log("init del servicio de sbs ");
   var arr = [];
   var arrayModel = [];
   var date;
