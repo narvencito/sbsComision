@@ -12,6 +12,7 @@ router.post('/sbs', (req, res) => {
   var date;
   puppeteer
     .launch({
+      headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
