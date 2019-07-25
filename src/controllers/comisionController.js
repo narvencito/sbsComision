@@ -16,6 +16,8 @@ router.post('/sbs', (req, res) => {
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--single-process'
       ],
     })
     .then(function (browser) {
