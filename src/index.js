@@ -10,6 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json({limit:'10mb'}));
 
 app.use('/comision', require('./controllers/comisionController'));
+app.use('/afiliado', require('./controllers/afiliadoController'));
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
