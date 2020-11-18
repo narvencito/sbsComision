@@ -22,7 +22,7 @@ router.post('/spp', async (req, res) => {
       await page.goto(url);
       console.log((Math.random()*(1.5-0.25)).toFixed(2)*100);
       await page.waitFor((Math.random()*(1.5-0.25)).toFixed(2)*100);
-      console.log("init");
+      console.log("init 2");
       await page.evaluate(val => document.querySelector('#cphContent_txtDocumento').value = val, pDni);
       await page.click('input[type="submit"]', {waitUntil: 'domcontentloaded'});
       await page.waitForNavigation();
