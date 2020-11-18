@@ -20,7 +20,8 @@ router.post('/spp', async (req, res) => {
       });
       const page = await browser.newPage();
       await page.goto(url);
-      await page.waitFor(200);
+      console.log((Math.random()*(1.5-0.25)).toFixed(2)*100);
+      await page.waitFor((Math.random()*(1.5-0.25)).toFixed(2)*100);
       console.log("init");
       await page.evaluate(val => document.querySelector('#cphContent_txtDocumento').value = val, pDni);
       await page.click('input[type="submit"]', {waitUntil: 'domcontentloaded'});
