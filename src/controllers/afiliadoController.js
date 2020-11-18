@@ -9,6 +9,7 @@ const aModel = require('../models/afiliado.model');
 router.post('/spp', async (req, res) => {
   console.log("inicio consulta spp");
   var pDni = req.body.dni;
+  console.log("DNI "+ pDni);
   var arr = [];
   try {
       const browser = await puppeteer.launch({
