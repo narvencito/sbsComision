@@ -33,7 +33,11 @@ router.post('/seguro', async (req, res) => {
           var code = "";
           var aux =false;
         do{
-            const worker = tesseract.createWorker();
+            const worker = tesseract.createWorker({
+              workerPath: path.join(__dirname, '../tesseract/src/node/worker.js'),
+              langPath: path.join(__dirname, '../tesseract/langs/'),
+              corePath: path.join(__dirname, '../tesseract/src/index.js')
+          });
             await (async () => {
             await worker.load();
             await worker.loadLanguage('eng');
