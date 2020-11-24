@@ -8,6 +8,7 @@ const eModel = require('../models/essalud.model');
 const tesseract = require('tesseract.js');
 const Axios = require('axios').default;
 const tokenApiDev = '0470665df727241c9fcbd9ef019c6bfa1cd1376709c09a69d0e6452f93b0c5be';// correo @narvencito
+const path = require("path");
 
 router.post('/seguro', async (req, res) => {
   console.log("inicio consulta seguro Fecha Nacimiento");
@@ -34,10 +35,8 @@ router.post('/seguro', async (req, res) => {
           var aux =false;
         do{
             const worker = tesseract.createWorker({
-              workerPath: path.join(__dirname, '../tesseract/src/node/worker.js'),
-              langPath: path.join(__dirname, '../tesseract/langs/'),
-              corePath: path.join(__dirname, '../tesseract/src/index.js')
-          });
+              langPath: path.join (__dirname, '../src/langs '),
+            });
             await (async () => {
             await worker.load();
             await worker.loadLanguage('eng');
