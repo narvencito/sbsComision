@@ -5,27 +5,35 @@ const url = 'https://www2.sbs.gob.pe/afiliados/paginas/consulta.aspx';
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const aModel = require('../models/afiliado.model');
+// const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+// puppeteer.use(StealthPlugin());
 
 router.post('/spp', async (req, res) => {
   console.log("inicio consulta spp");
   var pDni = req.body.dni;
-  console.log("DNI "+ pDni);
   var arr = [];
   try {
       const browser = await puppeteer.launch({
+        //ignoreHTTPSErrors: true,
+        headless: false,
+        //slowMo: 25,
         'args': [
+          '--disable-infobars',
           '--no-sandbox',
-          '--disable-setuid-sandbox'
+          '--disable-setuid-sandbox',
+         // '--ignore-certificate-errors'
         ]
       });
-      const page = await browser.newPage();
+      const context = await browser.createIncognitoBrowserContext();
+      const page = await context.newPage();
+      //await page.setUserAgent('5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36');
       await page.goto(url);
-      console.log((Math.random()*(1.5-0.25)).toFixed(3)*100);
-      await page.waitFor((Math.random()*(1.5-0.25)).toFixed(3)*100);
-      console.log("init 2");
+      await page.focus('#cphContent_txtDocumento');
+      await new Promise(r => setTimeout(r, 550));
       await page.evaluate(val => document.querySelector('#cphContent_txtDocumento').value = val, pDni);
+      await new Promise(r => setTimeout(r, 550));
       await page.click('input[type="submit"]', {waitUntil: 'domcontentloaded'});
-      await page.waitForNavigation();
+      await page.waitForNavigation({delay:350});
       var html = await page.content();
       const $ = cheerio.load(html);
       $('tr > td > span').toArray().map(item => {
@@ -56,6 +64,7 @@ router.post('/spp', async (req, res) => {
         ok: true,
         data: model
       });
+      await context.close();
       await browser.close();
 
     } catch (error) {
