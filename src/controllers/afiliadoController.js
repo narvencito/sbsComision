@@ -19,7 +19,6 @@ router.post('/spp', async (req, res) => {
         //slowMo: 25,
         //ignoreDefaultArgs: ['--disable-extensions'],
         'args': [
-          '--disable-infobars',
           '--no-sandbox',
           '--disable-setuid-sandbox',
          // '--ignore-certificate-errors'

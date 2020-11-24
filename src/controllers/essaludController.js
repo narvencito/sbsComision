@@ -17,7 +17,6 @@ router.post('/seguro', async (req, res) => {
     //ignoreHTTPSErrors: true,
     //headless: false,
     'args': [
-      '--disable-infobars',
       '--no-sandbox',
       '--disable-setuid-sandbox',
     ]
