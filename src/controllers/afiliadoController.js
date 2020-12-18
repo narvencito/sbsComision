@@ -1,7 +1,8 @@
 'use strict'
 const express = require('express');
 const router = express.Router();
-const url = 'https://www2.sbs.gob.pe/afiliados/paginas/consulta.aspx';
+//const url = 'https://www2.sbs.gob.pe/afiliados/paginas/consulta.aspx';
+const url = 'https://reportedeudas.sbs.gob.pe/afiliados/paginas/Consulta.aspx';
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const aModel = require('../models/afiliado.model');
