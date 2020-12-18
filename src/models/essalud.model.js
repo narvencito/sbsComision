@@ -1,7 +1,9 @@
 class essaludModel  {
   
-    constructor(nombres, tipoAsegurado, dni, codigo, tipoSeguro , afiliado, centroSistencial, direccion, fechaNacimiento){
+    constructor(nombres, apellidoPaterno, apellidoMaterno, tipoAsegurado, dni, codigo, tipoSeguro , afiliado, centroSistencial, direccion, fechaNacimiento){
         this.nombres = nombres;
+        this.apellidoMaterno = apellidoMaterno;
+        this.apellidoPaterno = apellidoPaterno;
         this.tipoAsegurado = tipoAsegurado;
         this.dni = dni;
         this.codigo = codigo;

@@ -1,7 +1,7 @@
 'use strict'
 const express = require('express');
 const router = express.Router();
-const url = 'http://ww4.essalud.gob.pe:7777/acredita/';
+const url = 'http://ww4.essalud.gob.pe:7777/acredita/index.jsp';
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const eModel = require('../models/essalud.model');
@@ -9,6 +9,7 @@ const tesseract = require('tesseract.js');
 const Axios = require('axios').default;
 const tokenApiDev = '0470665df727241c9fcbd9ef019c6bfa1cd1376709c09a69d0e6452f93b0c5be';// correo @narvencito
 const path = require("path");
+const { Console } = require('console');
 
 router.post('/seguro', async (req, res) => {
   console.log("inicio consulta seguro Fecha Nacimiento");
@@ -33,10 +34,9 @@ router.post('/seguro', async (req, res) => {
           await element.screenshot({path: 'captcha.jpg', clip: {x: 560, y: 265, width: 110, height: 35}});
           var code = "";
           var aux =false;
+          var cont = 0;
         do{
-            const worker = tesseract.createWorker({
-              langPath: path.join (__dirname, '../src/langs '),
-            });
+            const worker = tesseract.createWorker();
             await (async () => {
             await worker.load();
             await worker.loadLanguage('eng');
@@ -56,7 +56,11 @@ router.post('/seguro', async (req, res) => {
               }
             await worker.terminate();
           })();
-
+          if(cont==1){
+            console.log("ejecuntado error de contador");
+            throw '';
+          }
+          cont++;
         }while(!aux);
 
       await page.$eval('input[name="captchafield_doc"]', (el, value) => el.value = value, code);
@@ -70,8 +74,10 @@ router.post('/seguro', async (req, res) => {
       });
 
       var model = new eModel();
-      if(arr.length == 0){
+      console.log("arr "+ arr.length);
+      if(arr.length == 1 || arr.length == 0){
           // llamada a apis
+          console.log("llamada a apis");
         const config = {
             headers: { Authorization: `Bearer ${tokenApiDev}` }
         };
@@ -83,8 +89,16 @@ router.post('/seguro', async (req, res) => {
           var data = resp.data;
           model.nombres = data.data.nombre_completo;
           model.dni = data.data.numero;
+          model.tipoAsegurado = "";
+          model.codigo = "";
+          model.tipoSeguro = "";
+          model.centroSistencial = "";
+          model.direccion = "";
+          model.afiliado = "";
           model.fechaNacimiento = data.data.fecha_nacimiento;
-        }).catch(console.log);
+        }).catch(e =>{
+          console.log("error se servicio timeout", e);
+        });
         
 
       }else{
@@ -94,7 +108,9 @@ router.post('/seguro', async (req, res) => {
       var dia = arr[8].substring(4,6).trim();
       var dif = parseInt(currentdate.getFullYear().toString().substring(2,4)) - parseInt(anio);
         for (var i = 0; i < arr.length; i++) {
-          model.nombres = arr[2].trim();
+          model.nombres = arr[2].trim().split(",")[1].trim();
+          model.apellidoPaterno = arr[2].trim().split(",")[0].split(' ')[0];
+          model.apellidoMaterno = arr[2].trim().split(",")[0].split(' ')[1];
           model.dni = arr[4].trim();
           model.tipoAsegurado = arr[6].trim();
           model.codigo = arr[8].trim();
@@ -123,8 +139,16 @@ router.post('/seguro', async (req, res) => {
       config
     ).then(resp => {
       var data = resp.data;
-      model.nombres = data.data.nombre_completo;
+      model.nombres = data.data.nombres;
+      model.apellidoMaterno = data.data.apellido_materno;
+      model.apellidoMaterno = data.data.apellido_paterno;
       model.dni = data.data.numero;
+      model.tipoAsegurado = "";
+      model.codigo = "";
+      model.tipoSeguro = "";
+      model.centroSistencial = "";
+      model.direccion = "";
+      model.afiliado = "";
       model.fechaNacimiento = data.data.fecha_nacimiento;
     }).catch(console.log);
 

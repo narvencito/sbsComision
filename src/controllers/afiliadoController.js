@@ -15,7 +15,7 @@ router.post('/spp', async (req, res) => {
   try {
       const browser = await puppeteer.launch({
         //ignoreHTTPSErrors: true,
-        headless: false,
+        //headless: false,
         //slowMo: 25,
         //ignoreDefaultArgs: ['--disable-extensions'],
         'args': [
