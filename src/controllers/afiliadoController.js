@@ -26,27 +26,21 @@ router.post('/spp', async (req, res) => {
   console.log("inicio consulta spp");
   var pDni = req.body.dni;
   var arr = [];
+  var status = false;
+  var msn = "";
   try {
       const browser = await puppeteer.launch({
-        //ignoreHTTPSErrors: true,
-        //headless: false,
-        //slowMo: 25,
-        //ignoreDefaultArgs: ['--disable-extensions'],
+        headless: false,
         'args': [
           '--no-sandbox',
           '--disable-setuid-sandbox',
-         // '--ignore-certificate-errors'
         ]
       });
       
-      //const context = await browser.();
       const page = await browser.newPage();
-      //await page.setUserAgent('5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36');
       await page.goto(url);
       await page.focus('#cphContent_txtDocumento');
-      //await new Promise(r => setTimeout(r, 550));
       await page.evaluate(val => document.querySelector('#cphContent_txtDocumento').value = val, pDni);
-      //await new Promise(r => setTimeout(r, 550));
       await Promise.all([
            page.solveRecaptchas(),
            page.waitForNavigation(),
@@ -58,35 +52,54 @@ router.post('/spp', async (req, res) => {
         arr.push($(item).text().trim())
       });
       var model = new aModel();
+      console.log("data ",arr);
       if(arr.length > 0){
-        model.dni = arr[1];
-        model.apellidoPaterno = arr[2];
-        model.apellidoMaterno = arr[4];
-        model.primerNombre = arr[6];
-        model.nacionalidad = arr[7];
-        model.segundoNombre = arr[8];
-        model.sexo = arr[12];
-        model.lugarResidencia = arr[9] +"-"+arr[10]+"-"+arr[11];
-        model.estadoCivil = arr[13];
-        model.codigoAfiliado = arr[14];
-        model.origenAfiliado = arr[15];
-        model.situacionAfiliado = arr[16];
-        model.tipoTrabajador = arr[17];
-        model.tipoComision = arr[18];
-        model.afpActual = arr[19];
-        model.fechaDefuncion = arr[20];
-        model.fechaIngresoSpp = arr[21];
+        if(arr[6]=="Error: La consulta es sospechosa."){
+          console.log("consulta sopechosa");
+          throw "";
+        }else{
+          status = true;
+          msn = "registro encontrado";
+          model.dni = arr[1];
+          model.apellidoPaterno = arr[2];
+          model.apellidoMaterno = arr[4];
+          model.primerNombre = arr[6];
+          model.nacionalidad = arr[7];
+          model.segundoNombre = arr[8];
+          model.sexo = arr[12];
+          model.lugarResidencia = arr[9] +"-"+arr[10]+"-"+arr[11];
+          model.estadoCivil = arr[13];
+          model.codigoAfiliado = arr[14];
+          model.origenAfiliado = arr[15];
+          model.situacionAfiliado = arr[16];
+          model.tipoTrabajador = arr[17];
+          model.tipoComision = arr[18];
+          model.afpActual = arr[19];
+          model.fechaDefuncion = arr[20];
+          model.fechaIngresoSpp = arr[21];
+        }
+        
+      }else{
+        console.log("trabajador no registardo");
+        model = null;
+        msn="registro no encontrado";
       }
       
       res.status(200).send({
-        ok: true,
-        data: model
+        ok: status,
+        data: model,
+        message: msn
       });
       //await context.close();
       await browser.close();
 
     } catch (error) {
     console.log("try error " + error);
+    res.status(200).send({
+      ok: false,
+      data: null,
+      message: "error"
+    });
   }
 
 });
