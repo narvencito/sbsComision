@@ -40,7 +40,8 @@ router.post('/spp', async (req, res) => {
   const browser = await puppeteer.launch({
     args: [`--proxy-server=${newProxyUrl}`],
     ignoreHTTPSErrors: true,
-    headless: false,
+    ignoreDefaultArgs: ['--disable-extensions'],
+    //headless: false,
     //headless: false,
     'args': [
       '--no-sandbox',
