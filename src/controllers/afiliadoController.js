@@ -114,7 +114,7 @@ router.post('/spp', async (req, res) => {
       
       res.status(200).send({
         ok: status,
-        data: model,
+        result: model,
         message: msn
       });
       await context.close();
@@ -127,7 +127,7 @@ router.post('/spp', async (req, res) => {
     
     res.status(200).send({
       ok: false,
-      data: null,
+      result: null,
       message: "error"
     });
    await browser.close();
