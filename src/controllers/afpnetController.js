@@ -212,7 +212,7 @@ router.post('/spp', async (req, res) => {
                   tipoAfp = cell.value;
                 }
                 if(colNumber == 15){
-                  console.log("afp ", tipoAfp);
+                  //console.log("afp ", tipoAfp);
                   var comisionAsignada = "";
                   comisiones.forEach((comision, index)=>{
                     //console.log("comision ", comision);
@@ -253,20 +253,20 @@ router.post('/spp', async (req, res) => {
         if (err) {
             throw err;
         }
-        console.log("File is deleted.");
+        // console.log("File is deleted.");
     });
       fs.unlink('./file/consultaSbs.xlsx', (err) => {
           if (err) {
               throw err;
           }
-          console.log("File is deleted.");
+          // console.log("File is deleted.");
       });
 
       fs.unlink('./file/consultaCUSPPMasiva.xlsx', (err) => {
         if (err) {
             throw err;
         }
-        console.log("File is deleted.");
+        // console.log("File is deleted.");
     });
     await page.evaluate(() => {//cerrar session
       document.getElementById('form-logout').submit();
