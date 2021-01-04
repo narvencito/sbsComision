@@ -21,11 +21,6 @@ puppeteer.use(
   })
 );
 
-// const proxyUrl = 'http://proxy.apify.com:8000';
-// const username = 'grauto'; //groups-RESIDENTIAL
-// const password = 'iWycxsC3644Hk4qsmkeKt8g65';
-var urlprox = "https://103.152.5.80:8080";
-const useProxy = require('puppeteer-page-proxy');
 
 router.post('/spp', async (req, res) => {
   console.log("inicio consulta spp");
