@@ -27,14 +27,6 @@ router.post('/spp', async (req, res) => {
   var pDevengue = req.body.devengue.split("-")[0]+req.body.devengue.split("-")[1];
   var arr = [];
 
-  //get comisiones por el periodo
-  try {
-    var comisiones = [];
-  var respuestaComisiones = await Axios.post(urlComisiones,{"periodo":periodo});
-  comisiones = respuestaComisiones.data.data;
-  } catch (error) {
-    console.log("error en comisiones ", error);
-  }
   //para crear el archivo excel para la consulta masiva
   const inserDataExcel = [];
 
@@ -173,6 +165,14 @@ router.post('/spp', async (req, res) => {
     await new Promise(r => setTimeout(r, 3000));//tiempo de descarga del archivo excel
     const workbook1 = new Excel.Workbook();
     await workbook1.xlsx.readFile("./file/consultaCUSPPMasiva.xlsx");
+    //get comisiones por el periodo
+      try {
+        var comisiones = [];
+      var respuestaComisiones = await Axios.post(urlComisiones,{"periodo":periodo});
+      comisiones = respuestaComisiones.data.data;
+      } catch (error) {
+        console.log("error en comisiones ", error);
+      }
     const worksheet1 = workbook1.getWorksheet(1);
     worksheet1.eachRow(function(row, rowNumber) {
       var model = new aModel();
