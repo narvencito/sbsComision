@@ -16,8 +16,8 @@ const Axios = require('axios').default;
 ////para la descarga del archivo de exel de la pagina
 const mkdirp = require('mkdirp');
 const path = require('path');
-const myDownloadPath = path.resolve("file");
-mkdirp(myDownloadPath);
+const downloadpathFile = path.resolve("file");
+mkdirp(downloadpathFile);
 
 router.post('/spp', async (req, res) => {
   console.log("inicio consulta spp afpnet");
@@ -63,7 +63,7 @@ router.post('/spp', async (req, res) => {
 
   try {
       const page = await browser.newPage();
-      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: myDownloadPath });// para descargar el archivo
+      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: downloadpathFile });// para descargar el archivo
       await page.goto(urlAfpnet);
       // await page.waitForSelector(".close");
       await new Promise(r => setTimeout(r, 1500));
