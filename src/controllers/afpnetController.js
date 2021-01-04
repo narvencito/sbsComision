@@ -55,7 +55,7 @@ router.post('/spp', async (req, res) => {
 
   //inicio de puppeter
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     //slowMo: 25,
     'args': [
       '--no-sandbox',
@@ -65,14 +65,14 @@ router.post('/spp', async (req, res) => {
 
   try {
       const page = await browser.newPage();
-      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: myDownloadPath });
+      await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: myDownloadPath });// para descargar el archivo
       await page.goto(urlAfpnet);
-      await page.waitForSelector(".close");
+      // await page.waitForSelector(".close");
       await new Promise(r => setTimeout(r, 1050));
       if(await page.$$('.close')){// para validar si se encuentra la clase  y eliminar modales
         const modals = await page.$$('.close');
         for (let index = 0; index < modals.length; index++) {
-          await new Promise(r => setTimeout(r, 550));
+          await new Promise(r => setTimeout(r, 150));
           await page.evaluate((index) =>{document.querySelectorAll(".close")[index].click();}, index);
           
         }
@@ -104,7 +104,7 @@ router.post('/spp', async (req, res) => {
               await page.evaluate(val => document.querySelector('#Contrasenia').value = val, password);
               await page.focus('#Captcha');
               await page.evaluate(val => document.querySelector('#Captcha').value = val, code.toUpperCase());
-              await new Promise(r => setTimeout(r, 550));
+              await new Promise(r => setTimeout(r, 150));
               await page.click('#btn-ingresar');
 
               try {
@@ -114,7 +114,7 @@ router.post('/spp', async (req, res) => {
                   if(messageLogin){// si existe
                     const text = await page.evaluate(messageLogin => messageLogin.textContent, messageLogin);
                     if(text.trim()=="El texto ingresado es incorrecto."){
-                      await new Promise(r => setTimeout(r, 550));
+                      await new Promise(r => setTimeout(r, 150));
                       const element2 = await page.$('#CaptchaImg');      
                       await element2.screenshot({path: 'captcha.jpg'});
                       aux = true;
@@ -135,7 +135,7 @@ router.post('/spp', async (req, res) => {
                     await page.evaluate(val => document.querySelector('#Contrasenia').value = val, password);
                     await page.focus('#Captcha');
                     await page.evaluate(val => document.querySelector('#Captcha').value = val, code.toUpperCase());
-                    await new Promise(r => setTimeout(r, 550));
+                    await new Promise(r => setTimeout(r, 150));
                     await page.click('#btn-ingresar');
                     const element3 = await page.$('#CaptchaImg');      
                     await element3.screenshot({path: 'captcha.jpg'});
@@ -153,7 +153,7 @@ router.post('/spp', async (req, res) => {
               await page.evaluate(val => document.querySelector('#Contrasenia').value = val, password);
               await page.focus('#Captcha');
               await page.evaluate(val => document.querySelector('#Captcha').value = val, code.toUpperCase());
-              await new Promise(r => setTimeout(r, 550));
+              await new Promise(r => setTimeout(r, 150));
               await page.click('#btn-ingresar');
               const element1 = await page.$('#CaptchaImg');      
               await element1.screenshot({path: 'captcha.jpg'});
@@ -162,12 +162,12 @@ router.post('/spp', async (req, res) => {
             console.log("aux ", aux);
     }while(aux);        
     
-    await new Promise(r => setTimeout(r, 550));
+    await new Promise(r => setTimeout(r, 150));
     await page.select('select[name="devengue"]', pDevengue);
     await new Promise(r => setTimeout(r, 150));
     const elementHandle = await page.$("input[type=file]");
     await elementHandle.uploadFile('./file/consultaSbs.xlsx');
-    await new Promise(r => setTimeout(r, 1500));// tiempo para esperar la carga del archivo
+    await new Promise(r => setTimeout(r, 3000));// tiempo para esperar la carga del archivo
     const [button] = await page.$x("//button[contains(., 'Cargar')]");
     if (button) {
         await button.click();
@@ -245,7 +245,10 @@ router.post('/spp', async (req, res) => {
         }
         console.log("File is deleted.");
     });
-      
+    await page.evaluate(() => {//cerrar session
+      document.getElementById('form-logout').submit();
+    });
+    await new Promise(r => setTimeout(r, 150));
     await browser.close();
 
     } catch (error) {
@@ -254,6 +257,7 @@ router.post('/spp', async (req, res) => {
       success: false,
         result: null
       });
+
     await browser.close();
   }
 
