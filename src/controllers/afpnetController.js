@@ -162,17 +162,18 @@ router.post('/spp', async (req, res) => {
     if (button) {
         await button.click();
     }
-    await new Promise(r => setTimeout(r, 3000));//tiempo de descarga del archivo excel
+    //await new Promise(r => setTimeout(r, 3000));//tiempo de descarga del archivo excel
+    //get comisiones por el periodo
+    try {
+      var comisiones = [];
+    var respuestaComisiones = await Axios.post(urlComisiones,{"periodo":periodo});
+    comisiones = respuestaComisiones.data.data;
+    } catch (error) {
+      console.log("error en comisiones ", error);
+    }
     const workbook1 = new Excel.Workbook();
     await workbook1.xlsx.readFile("./file/consultaCUSPPMasiva.xlsx");
-    //get comisiones por el periodo
-      try {
-        var comisiones = [];
-      var respuestaComisiones = await Axios.post(urlComisiones,{"periodo":periodo});
-      comisiones = respuestaComisiones.data.data;
-      } catch (error) {
-        console.log("error en comisiones ", error);
-      }
+    
     const worksheet1 = workbook1.getWorksheet(1);
     worksheet1.eachRow(function(row, rowNumber) {
       var model = new aModel();
