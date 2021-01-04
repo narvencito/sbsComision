@@ -152,12 +152,12 @@ router.post('/spp', async (req, res) => {
             console.log("aux ", aux);
     }while(aux);        
     
-    await new Promise(r => setTimeout(r, 150));
+    //await new Promise(r => setTimeout(r, 150));
     await page.select('select[name="devengue"]', pDevengue);
     await new Promise(r => setTimeout(r, 150));
     const elementHandle = await page.$("input[type=file]");
     await elementHandle.uploadFile('./file/consultaSbs.xlsx');
-    await new Promise(r => setTimeout(r, 3000));// tiempo para esperar la carga del archivo
+    await new Promise(r => setTimeout(r, 2000));// tiempo para esperar la carga del archivo
     const [button] = await page.$x("//button[contains(., 'Cargar')]");
     if (button) {
         await button.click();
