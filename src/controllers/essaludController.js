@@ -13,21 +13,21 @@ const { Console } = require('console');
 
 router.post('/seguro', async (req, res) => {
   var pDni = req.body.dni;
-  var arr = [];
-  const browser = await puppeteer.launch({
-    //ignoreHTTPSErrors: true,
-    //headless: false,
-    ignoreDefaultArgs: ['--disable-extensions'],
-    'args': [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-    ]
-  });
+  //var arr = [];
+  // const browser = await puppeteer.launch({
+  //   //ignoreHTTPSErrors: true,
+  //   //headless: false,
+  //   ignoreDefaultArgs: ['--disable-extensions'],
+  //   'args': [
+  //     '--no-sandbox',
+  //     '--disable-setuid-sandbox',
+  //   ]
+  // });
   // const context = await browser.createIncognitoBrowserContext();
   // const page = await context.newPage();
   try {
             console.log("obteniendo fecha de nacimiento");
-            await new Promise(r => setTimeout(r, 500));
+            await new Promise(r => setTimeout(r, 1000));
             console.log("iniciando");
             const config = {
                 headers: { Authorization: `Bearer ${tokenApiDev}` }
