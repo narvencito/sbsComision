@@ -58,7 +58,7 @@ router.post('/spp', async (req, res) => {
       await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: downloadpathFile });// para descargar el archivo
       await page.goto(urlAfpnet);
       // await page.waitForSelector(".close");
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 1000));
       if(await page.$$('.close')){// para validar si se encuentra la clase  y eliminar modales
         const modals = await page.$$('.close');
         for (let index = 0; index < modals.length; index++) {
