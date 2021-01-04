@@ -27,22 +27,6 @@ router.post('/spp', async (req, res) => {
   var pDevengue = req.body.devengue.split("-")[0]+req.body.devengue.split("-")[1];
   var arr = [];
 
-  //para crear el archivo excel para la consulta masiva
-  const inserDataExcel = [];
-
-  for(let item of pListDni) {
-      var d = {"tipoDocumento":"0", "dni":item.dni};
-      inserDataExcel.push(d);
-  }
-
-  const workbook = new Excel.Workbook();
-  const worksheet = workbook.addWorksheet('Hoja1');
-  inserDataExcel.forEach((data,index)=>{
-    worksheet.addRow([data.tipoDocumento,data.dni]);
-  });
-
-  await workbook.xlsx.writeFile('./file/consultaSbs.xlsx');
-
   //inicio de puppeter
   const browser = await puppeteer.launch({
     headless: true,
@@ -151,7 +135,19 @@ router.post('/spp', async (req, res) => {
             })();
             console.log("aux ", aux);
     }while(aux);        
-    
+    //para crear el archivo excel para la consulta masiva
+      const inserDataExcel = [];
+      for(let item of pListDni) {
+          var d = {"tipoDocumento":"0", "dni":item.dni};
+          inserDataExcel.push(d);
+      }
+      const workbook = new Excel.Workbook();
+      const worksheet = workbook.addWorksheet('Hoja1');
+      inserDataExcel.forEach((data,index)=>{
+        worksheet.addRow([data.tipoDocumento,data.dni]);
+      });
+
+    await workbook.xlsx.writeFile('./file/consultaSbs.xlsx');
     //await new Promise(r => setTimeout(r, 150));
     await page.select('select[name="devengue"]', pDevengue);
     await new Promise(r => setTimeout(r, 150));
