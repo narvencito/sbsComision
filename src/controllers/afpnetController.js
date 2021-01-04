@@ -53,7 +53,7 @@ router.post('/spp', async (req, res) => {
 
   //inicio de puppeter
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     //slowMo: 25,
     'args': [
       '--no-sandbox',
@@ -170,7 +170,7 @@ router.post('/spp', async (req, res) => {
     if (button) {
         await button.click();
     }
-    await new Promise(r => setTimeout(r, 3000));
+    await new Promise(r => setTimeout(r, 3000));//tiempo de descarga del archivo excel
     const workbook1 = new Excel.Workbook();
     await workbook1.xlsx.readFile("./file/consultaCUSPPMasiva.xlsx");
     const worksheet1 = workbook1.getWorksheet(1);
