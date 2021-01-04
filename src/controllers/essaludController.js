@@ -26,7 +26,9 @@ router.post('/seguro', async (req, res) => {
   // const context = await browser.createIncognitoBrowserContext();
   // const page = await context.newPage();
   try {
-    console.log("obteneiendo fecha de nacimiento");
+            console.log("obteniendo fecha de nacimiento");
+            await new Promise(r => setTimeout(r, 500));
+            console.log("iniciando");
             const config = {
                 headers: { Authorization: `Bearer ${tokenApiDev}` }
             };
@@ -48,7 +50,7 @@ router.post('/seguro', async (req, res) => {
               model.direccion = null;
               model.afiliado = null;
               model.fechaNacimiento = data.data.fecha_nacimiento;
-            }).catch(console.log);
+            }).catch((err)=>console.log("error ", err));
  
       //     await page.goto(url, {timeout: 1000});
       //     await page.type('#BuscarPor', 'Tipo de Documento');
