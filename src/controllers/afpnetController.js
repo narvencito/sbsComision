@@ -32,11 +32,9 @@ router.post('/spp', async (req, res) => {
     var comisiones = [];
   var respuestaComisiones = await Axios.post(urlComisiones,{"periodo":periodo});
   comisiones = respuestaComisiones.data.data;
-  // console.log("comisiones ", comisiones);
   } catch (error) {
     console.log("error en comisiones ", error);
   }
-  
   //para crear el archivo excel para la consulta masiva
   const inserDataExcel = [];
 
@@ -68,7 +66,7 @@ router.post('/spp', async (req, res) => {
       await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: myDownloadPath });// para descargar el archivo
       await page.goto(urlAfpnet);
       // await page.waitForSelector(".close");
-      await new Promise(r => setTimeout(r, 1050));
+      await new Promise(r => setTimeout(r, 1500));
       if(await page.$$('.close')){// para validar si se encuentra la clase  y eliminar modales
         const modals = await page.$$('.close');
         for (let index = 0; index < modals.length; index++) {
@@ -188,6 +186,7 @@ router.post('/spp', async (req, res) => {
           model.fecha_defuncion = null;
           model.fecha_afiliacion = null;
           if(rowNumber != 1){
+            var tipoAfp = "";
             row.eachCell(function(cell, colNumber) {
                 if(colNumber == 2){
                   model.documento = cell.value;
@@ -210,9 +209,33 @@ router.post('/spp', async (req, res) => {
                 }
                 if(colNumber == 14){
                   model.afp_actual = cell.value;
+                  tipoAfp = cell.value;
                 }
                 if(colNumber == 15){
-                  model.tipo_comision = cell.value;
+                  console.log("afp ", tipoAfp);
+                  var comisionAsignada = "";
+                  comisiones.forEach((comision, index)=>{
+                    //console.log("comision ", comision);
+                    if(tipoAfp == comision.DenominacionRegimen){
+                      // console.log("compare values " + cell.value + "- "+ comision.ComisionFlujo +"-"+comision.ComisionFlujoMixta+ "-"+comision.ComisionSaldo);
+                      // console.log("compare ", cell.value == comision.ComisionFlujo);
+                      // console.log("compare ", cell.value == comision.ComisionFlujoMixta);
+                      // console.log("compare ", cell.value == comision.ComisionSaldo);
+                      switch(cell.value) {
+                        case comision.ComisionFlujo:
+                          comisionAsignada = "Comision/Flujo";
+                          break;
+                        case comision.ComisionFlujoMixta:
+                          comisionAsignada = "Com.Mixta/Saldo";
+                          break;
+                        case comision.ComisionSaldo:
+                          // no se que poner aqui 
+                          break;
+  
+                      }
+                    }
+                  });
+                  model.tipo_comision = comisionAsignada;
                 }
             });
             arr.push(model);
@@ -248,7 +271,7 @@ router.post('/spp', async (req, res) => {
     await page.evaluate(() => {//cerrar session
       document.getElementById('form-logout').submit();
     });
-    await new Promise(r => setTimeout(r, 150));
+    await new Promise(r => setTimeout(r, 550));
     await browser.close();
 
     } catch (error) {
