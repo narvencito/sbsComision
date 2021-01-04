@@ -23,15 +23,19 @@ router.post('/seguro', async (req, res) => {
       '--disable-setuid-sandbox',
     ]
   });
-  const context = await browser.createIncognitoBrowserContext();
-  const page = await context.newPage();
+  // const context = await browser.createIncognitoBrowserContext();
+  // const page = await context.newPage();
   try {
-  
+    console.log("obteneiendo fecha de nacimiento");
+            const config = {
+                headers: { Authorization: `Bearer ${tokenApiDev}` }
+            };
             var model = new eModel();
             await Axios.get( 
               'https://apiperu.dev/api/dni/'+pDni,
               config
-            ).then(resp => {
+            )
+            .then(resp => {
               var data = resp.data;
               model.nombres = data.data.nombres;
               model.apellidoMaterno = data.data.apellido_materno;
@@ -148,10 +152,11 @@ router.post('/seguro', async (req, res) => {
          data: model
        });
 
-      await context.close();
-      await browser.close();
+      // await context.close();
+      // await browser.close();
 
     } catch (error) {
+      console.log("error al obtener fecha de nacimiento", error);
       const config = {
         headers: { Authorization: `Bearer ${tokenApiDev}` }
     };
@@ -180,8 +185,8 @@ router.post('/seguro', async (req, res) => {
         data: model
       });
 
-      await context.close();
-      await browser.close();
+      // await context.close();
+      // await browser.close();
     }
 });
 
