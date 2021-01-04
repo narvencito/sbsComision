@@ -7,7 +7,8 @@ const cheerio = require('cheerio');
 const eModel = require('../models/essalud.model');
 const tesseract = require('tesseract.js');
 const Axios = require('axios').default;
-const tokenApiDev = '0470665df727241c9fcbd9ef019c6bfa1cd1376709c09a69d0e6452f93b0c5be';// correo @narvencito
+//const tokenApiDevNarv = '0470665df727241c9fcbd9ef019c6bfa1cd1376709c09a69d0e6452f93b0c5be';// correo @narvencito
+const tokenApiDevNarv = '15728f3b3c06cc0ed0d008f0f381b99fa5331f1c15e1f90f3bb90d6aa4f032b6';// correo @em.
 const path = require("path");
 const { Console } = require('console');
 
@@ -30,7 +31,7 @@ router.post('/seguro', async (req, res) => {
             await new Promise(r => setTimeout(r, 1000));
             console.log("iniciando");
             const config = {
-                headers: { Authorization: `Bearer ${tokenApiDev}` }
+                headers: { Authorization: `Bearer ${tokenApiDevNarv}` }
             };
             var model = new eModel();
             await Axios.get( 
@@ -105,7 +106,7 @@ router.post('/seguro', async (req, res) => {
       //     // llamada a apis
       //     console.log("llamada a apis");
       //   const config = {
-      //       headers: { Authorization: `Bearer ${tokenApiDev}` }
+      //       headers: { Authorization: `Bearer ${tokenApiDevNarv}` }
       //   };
         
       //   await Axios.get( 
@@ -160,7 +161,7 @@ router.post('/seguro', async (req, res) => {
     } catch (error) {
       console.log("error al obtener fecha de nacimiento", error);
       const config = {
-        headers: { Authorization: `Bearer ${tokenApiDev}` }
+        headers: { Authorization: `Bearer ${tokenApiDevNarv}` }
     };
     var model = new eModel();
     await Axios.get( 
